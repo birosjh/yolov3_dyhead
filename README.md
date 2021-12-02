@@ -18,5 +18,5 @@ For benchmarking we will be using the [PASCAL VOC](http://host.robots.ox.ac.uk/p
 
 Relevant Research Papers:
 
-[DyHead](https://arxiv.org/pdf/2106.08322v1.pdf)
-[YOLOv3](https://arxiv.org/pdf/1804.02767.pdf)
+- [DyHead](https://arxiv.org/pdf/2106.08322v1.pdf)
+- [YOLOv3](https://arxiv.org/pdf/1804.02767.pdf)
