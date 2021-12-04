@@ -11,3 +11,5 @@ RUN pip3 install poetry --user
 ENV PATH="${PATH}:/root/.local/bin"
 
 RUN poetry install
+
+RUN pip install opencv-python
