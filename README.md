@@ -20,3 +20,47 @@ Relevant Research Papers:
 
 - [DyHead](https://arxiv.org/pdf/2106.08322v1.pdf)
 - [YOLOv3](https://arxiv.org/pdf/1804.02767.pdf)
+
+### AWS Environment
+
+We used an EC2 GPU instance with the [AWS Deep Learning AMI (Ubuntu 18.04)](https://aws.amazon.com/marketplace/pp/prodview-x5nivojpquy6y).
+However, because we are using a docker environment, the AMI should not matter as long as it is CUDA enabled and contains docker.
+
+### Setup
+
+To run the model, first build your docker image with the following command:
+
+```
+docker build .
+```
+
+When running locally, use this command to start a container:
+
+```
+docker run -dit -v $(PWD):/code --name dyhead dyhead
+```
+
+When running on an EC2 server, use this command to start a container:
+
+```
+docker run --gpus all -dit -v $(PWD):/code --name dyhead dyhead
+```
+
+Once started, you can access your container with:
+
+```
+docker exec -it dyhead bash
+```
+
+If you need to shutdown your container, to stop it run:
+
+```
+docker container stop dyhead
+```
+
+To remove it, run:
+
+```
+docker container rm dyhead
+```
+
