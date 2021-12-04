@@ -33,7 +33,7 @@ However, because we are using a docker environment, the AMI should not matter as
 To run the model, first build your docker image with the following command:
 
 ```
-docker build .
+docker build . -t dyhead
 ```
 
 When running locally, use this command to start a container:
