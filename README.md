@@ -28,6 +28,8 @@ However, because we are using a docker environment, the AMI should not matter as
 
 ### Setup
 
+##### Docker Environment
+
 To run the model, first build your docker image with the following command:
 
 ```
@@ -63,4 +65,8 @@ To remove it, run:
 ```
 docker container rm dyhead
 ```
+
+##### Data Setup
+
+The VOC dataset is in a different format than the COCO dataset that this model was originall built for.  To convert the VOC dataset to the COCO format, we used this [script](https://github.com/TannerGilbert/YOLO-Tutorials/blob/master/YOLO-Object-Detection-in-PyTorch/convert_voc_to_yolo.py)
 
