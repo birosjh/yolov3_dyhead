@@ -37,13 +37,13 @@ docker build .
 When running locally, use this command to start a container:
 
 ```
-docker run -dit -v $(PWD):/code --name dyhead dyhead
+docker run -dit -p 6006:6006 -v $(PWD):/code --name dyhead dyhead
 ```
 
 When running on an EC2 server, use this command to start a container:
 
 ```
-docker run --gpus all -dit -v $(PWD):/code --name dyhead dyhead
+docker run --gpus all -p 6006:6006 -dit -v $(PWD):/code --name dyhead dyhead
 ```
 
 Once started, you can access your container with:
