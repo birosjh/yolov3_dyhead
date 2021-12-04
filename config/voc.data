@@ -1,4 +1,4 @@
 classes=20
 train=data/VOC2012/train.txt
-valid=data/VOC2012/val.txt
+valid=data/VOC2012/test.txt
 names=data/voc.names
