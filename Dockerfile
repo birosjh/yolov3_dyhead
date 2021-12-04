@@ -4,7 +4,7 @@ WORKDIR /code
 
 COPY pyproject.toml pyproject.toml
 
-RUN apt update && apt-get install -y python3.9 && apt-get install -y python3-pip
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -yq ffmpeg libsm6 libxext6 python3.9 python3-pip
 
 RUN pip3 install poetry --user
 
