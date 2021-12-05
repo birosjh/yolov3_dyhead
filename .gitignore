@@ -1,0 +1,6 @@
+data/VOC2012
+__pycache__/
+darknet53.conv.74
+yolov3-tiny.weights
+yolov3.weights
+logs/
