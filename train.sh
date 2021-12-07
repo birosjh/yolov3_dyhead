@@ -1,1 +1,1 @@
-poetry run yolo-train --data config/voc.data --n_cpu 4 --evaluation_interval 15
+poetry run yolo-train --model config/yolov3-voc.cfg --data config/voc.data --n_cpu 4 --evaluation_interval 15
