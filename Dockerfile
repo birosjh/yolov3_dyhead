@@ -13,3 +13,5 @@ ENV PATH="${PATH}:/root/.local/bin"
 RUN poetry install
 
 RUN pip install opencv-python
+
+RUN poetry run python -m pip install -e DynamicHead
