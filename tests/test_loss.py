@@ -54,6 +54,8 @@ class TestLoss(unittest.TestCase):
         outputs = self.model(images)
 
         print(outputs[0].shape)
+        print(outputs[1].shape)
+        print(outputs[2].shape)
 
         loss, loss_components = compute_loss(outputs, targets, self.model)
 
