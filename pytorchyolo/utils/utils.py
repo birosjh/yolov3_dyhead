@@ -81,6 +81,23 @@ def rescale_boxes(boxes, current_dim, original_shape):
     return boxes
 
 
+def convert_boxes(boxes, original_shape):
+    """
+    Rescales bounding boxes to the original shape
+    """
+    orig_h, orig_w = original_shape
+    # Rescale bounding boxes to dimension of original image
+    x_centers = boxes[:, 0] * orig_w
+    y_centers = boxes[:, 1] * orig_h
+    widths = boxes[:, 2] * orig_w
+    heights = boxes[:, 3] * orig_h
+    boxes[:, 0] = x_centers - (widths / 2)
+    boxes[:, 1] = y_centers - (heights / 2)
+    boxes[:, 2] = x_centers + (widths / 2)
+    boxes[:, 3] = y_centers + (heights / 2)
+    return boxes
+
+
 def xywh2xyxy(x):
     y = x.new(x.shape)
     y[..., 0] = x[..., 0] - x[..., 2] / 2
