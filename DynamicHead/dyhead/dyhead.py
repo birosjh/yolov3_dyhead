@@ -86,6 +86,7 @@ class DyHead(nn.Module):
     def __init__(self, out_channels, channels, num_convs, backbone):
         super(DyHead, self).__init__()
         self.backbone = backbone
+        self.hyperparams = backbone.hyperparams
         in_channels = out_channels
 
         dyhead_tower = []
