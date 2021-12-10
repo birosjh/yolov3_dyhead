@@ -101,14 +101,14 @@ class DyHead(nn.Module):
 
         self.add_module('dyhead_tower', nn.Sequential(*dyhead_tower))
 
-        self._out_feature_strides = self.backbone._out_feature_strides
-        self._out_features = list(self._out_feature_strides.keys())
-        self._out_feature_channels = {k: channels for k in self._out_features}
-        self._size_divisibility = list(self._out_feature_strides.values())[-1]
+        # self._out_feature_strides = self.backbone._out_feature_strides
+        # self._out_features = list(self._out_feature_strides.keys())
+        # self._out_feature_channels = {k: channels for k in self._out_features}
+        # self._size_divisibility = list(self._out_feature_strides.values())[-1]
 
-    @property
-    def size_divisibility(self):
-        return self._size_divisibility
+    # @property
+    # def size_divisibility(self):
+    #     return self._size_divisibility
 
     def forward(self, x):
         x = self.backbone(x)
