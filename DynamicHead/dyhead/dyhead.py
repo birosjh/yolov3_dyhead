@@ -85,7 +85,6 @@ class DyConv(nn.Module):
 class DyHead(nn.Module):
     def __init__(self, out_channels, channels, num_convs, backbone):
         super(DyHead, self).__init__()
-        self.cfg = cfg
         self.backbone = backbone
         in_channels = out_channels
 
