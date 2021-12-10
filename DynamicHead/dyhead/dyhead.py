@@ -83,15 +83,14 @@ class DyConv(nn.Module):
 
 
 class DyHead(nn.Module):
-    def __init__(self, cfg, backbone):
+    def __init__(self, out_channels, channels, num_convs, backbone):
         super(DyHead, self).__init__()
         self.cfg = cfg
         self.backbone = backbone
-        in_channels = cfg.MODEL.FPN.OUT_CHANNELS
-        channels = cfg.MODEL.DYHEAD.CHANNELS
+        in_channels = out_channels
 
         dyhead_tower = []
-        for i in range(cfg.MODEL.DYHEAD.NUM_CONVS):
+        for i in range(num_convs):
             dyhead_tower.append(
                 DyConv(
                     in_channels if i == 0 else channels,
