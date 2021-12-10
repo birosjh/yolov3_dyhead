@@ -14,9 +14,6 @@ from pytorchyolo.utils.augmentations import AUGMENTATION_TRANSFORMS
 class TestLoss(unittest.TestCase):
 
     def setUp(self):
-        self.model = load_model("config/yolov3-voc.cfg")
-
-        self.model.train()
 
         # Get data configuration
         data_config = parse_data_config("config/voc.data")
@@ -43,6 +40,24 @@ class TestLoss(unittest.TestCase):
 
 
     def test_loss(self):
+
+        model = load_model("config/yolov3-voc.cfg")
+
+        model.train()
+
+        _, images, targets = next(iter(self.dataloader))
+        
+        outputs = model(images)
+
+        print(outputs)
+
+        loss, loss_components = compute_loss(outputs, targets, model)
+
+    def test_dyhead_loss(self):
+
+        model = load_model("config/yolov3-voc.cfg", use_dyhead=True)
+
+        model.train()
 
         _, images, targets = next(iter(self.dataloader))
         
