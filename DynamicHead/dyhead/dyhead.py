@@ -112,5 +112,8 @@ class DyHead(nn.Module):
 
     def forward(self, x):
         x = self.backbone(x)
+
+        x = dict(zip(["level1", "level2", "level3"], x))
+
         dyhead_tower = self.dyhead_tower(x)
         return dyhead_tower
