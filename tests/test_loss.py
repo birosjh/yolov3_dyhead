@@ -44,7 +44,12 @@ class TestLoss(unittest.TestCase):
 
     def test_loss(self):
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
         _, images, targets = next(iter(self.dataloader))
+
+        images = images.to(device, non_blocking=True)   
+        targets = targets.to(device)
         
         outputs = self.model(images)
 
