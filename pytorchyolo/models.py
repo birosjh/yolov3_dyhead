@@ -10,6 +10,8 @@ import numpy as np
 from pytorchyolo.utils.parse_config import parse_model_config
 from pytorchyolo.utils.utils import weights_init_normal
 
+from DynamicHead.dyhead import DyHead
+
 
 def create_modules(module_defs):
     """
@@ -291,7 +293,7 @@ class Darknet(nn.Module):
         fp.close()
 
 
-def load_model(model_path, weights_path=None):
+def load_model(model_path, weights_path=None, use_dyhead=False):
     """Loads the yolo model from file.
 
     :param model_path: Path to model definition file (.cfg)
@@ -306,6 +308,15 @@ def load_model(model_path, weights_path=None):
     model = Darknet(model_path).to(device)
 
     model.apply(weights_init_normal)
+
+    if use_dyhead:
+
+        out_channels = 256 # Num output channels of YOLOv3
+        channels = 256 # Num of channels in DyHead
+        num_convs = 6 # Num Convolutional Layers in DyHead
+        
+
+        model = DyHead(out_channels, channels, num_convs, model)
 
     # If pretrained weights are specified, start from checkpoint or weight file
     if weights_path:
