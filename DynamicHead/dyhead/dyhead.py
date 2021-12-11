@@ -73,7 +73,6 @@ class DyConv(nn.Module):
             attn_fea = []
             res_fea = []
             for fea in temp_fea:
-                print(fea.shape)
                 res_fea.append(fea)
                 attn_fea.append(self.AttnConv(fea))
 
