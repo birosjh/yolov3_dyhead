@@ -115,10 +115,6 @@ class DyHead(nn.Module):
 
         largest_layer_dim = x[-1].shape[-2:]
 
-        print(x[0].shape)
-        print(x[1].shape)
-        print(x[2].shape)
-
         new_x = []
 
         for layer in x[:-1]:
@@ -131,6 +127,10 @@ class DyHead(nn.Module):
         print(new_x[2].shape)
 
         x = dict(zip(["level1", "level2", "level3"], new_x))
+
+        print(x["level1"].shape)
+        print(x["level2"].shape)
+        print(x["level3"].shape)
 
         dyhead_tower = self.dyhead_tower(x)
         return dyhead_tower
