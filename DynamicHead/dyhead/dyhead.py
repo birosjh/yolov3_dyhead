@@ -113,7 +113,9 @@ class DyHead(nn.Module):
     def forward(self, x):
         x = self.backbone(x)
 
-        print(x.shape)
+        print(x[0].shape)
+        print(x[1].shape)
+        print(x[2].shape)
 
         x = dict(zip(["level1", "level2", "level3"], x))
 
