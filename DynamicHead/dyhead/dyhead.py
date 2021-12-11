@@ -116,14 +116,14 @@ class DyHead(nn.Module):
     #     return self._size_divisibility
 
     def forward(self, x):
-        x = self.backbone(x)
+        x, img_size = self.backbone(x)
 
         layers = ["level1", "level2", "level3"]
 
         x.reverse()
         x = dict(zip(layers, x))
 
-        output, img_size = self.dyhead_tower(x)
+        output = self.dyhead_tower(x)
 
         layers.reverse()
         dyhead_tower = []
