@@ -57,6 +57,8 @@ class DyConv(nn.Module):
 
             feature = x[name]
 
+            print(feature.shape)
+
             offset_mask = self.offset(feature)
             offset = offset_mask[:, :18, :, :]
             mask = offset_mask[:, 18:, :, :].sigmoid()
@@ -73,6 +75,8 @@ class DyConv(nn.Module):
             for fea in temp_fea:
                 res_fea.append(fea)
                 attn_fea.append(self.AttnConv(fea))
+
+            print(res_fea.shape)
 
             res_fea = torch.stack(res_fea)
             spa_pyr_attn = self.h_sigmoid(torch.stack(attn_fea))
@@ -122,15 +126,7 @@ class DyHead(nn.Module):
 
         new_x.append(x[-1])
 
-        print(new_x[0].shape)
-        print(new_x[1].shape)
-        print(new_x[2].shape)
-
         x = dict(zip(["level1", "level2", "level3"], new_x))
-
-        print(x["level1"].shape)
-        print(x["level2"].shape)
-        print(x["level3"].shape)
 
         dyhead_tower = self.dyhead_tower(x)
         return dyhead_tower
