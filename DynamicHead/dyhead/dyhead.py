@@ -57,8 +57,6 @@ class DyConv(nn.Module):
 
             feature = x[name]
 
-            print(feature.shape)
-
             offset_mask = self.offset(feature)
             offset = offset_mask[:, :18, :, :]
             mask = offset_mask[:, 18:, :, :].sigmoid()
