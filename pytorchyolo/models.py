@@ -312,7 +312,7 @@ def load_model(model_path, weights_path=None, use_dyhead=False):
     if use_dyhead:
 
         out_channels = 75 # Num output channels of YOLOv3
-        channels = 256 # Num of channels in DyHead
+        channels = 75 # Num of channels in DyHead
         num_convs = 6 # Num Convolutional Layers in DyHead
         
 
