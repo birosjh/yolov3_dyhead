@@ -113,8 +113,8 @@ class DyHead(nn.Module):
     def forward(self, x):
         x = self.backbone(x)
 
-        smallest_layer_dim = x[-1].shape[0]
-        largest_layer_dim = x[-1].shape[-1]
+        smallest_layer_dim = int(x[-1].shape[0])
+        largest_layer_dim = int(x[-1].shape[-1])
         scale_limit = largest_layer_dim / smallest_layer_dim
 
         scale_factors = [i for i in range(scale_limit, 1)]
