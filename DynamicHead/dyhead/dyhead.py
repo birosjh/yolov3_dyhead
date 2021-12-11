@@ -11,7 +11,7 @@ class Conv3x3Norm(torch.nn.Module):
         super(Conv3x3Norm, self).__init__()
 
         self.conv = ModulatedDeformConv(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
-        self.bn = nn.GroupNorm(num_groups=16, num_channels=out_channels)
+        self.bn = nn.GroupNorm(num_groups=15, num_channels=out_channels)
 
     def forward(self, input, **kwargs):
         x = self.conv(input.contiguous(), **kwargs)
