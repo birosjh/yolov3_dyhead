@@ -113,7 +113,7 @@ class DyHead(nn.Module):
     def forward(self, x):
         x = self.backbone(x)
 
-        largest_layer_dim = int(x[-1].shape[-1])
+        largest_layer_dim = x[-1].shape[-2:]
 
         print(x[0].shape)
         print(x[1].shape)
@@ -121,9 +121,10 @@ class DyHead(nn.Module):
 
         new_x = []
 
-        for layer in x:
-            scale_factor = largest_layer_dim / layer.shape[-1]
-            new_x.append(F.upsample(x, layer, scale_factor=scale_factor))
+        for layer in x[:-1]:
+            new_x.append(F.upsample(layer, size=largest_layer_dim))
+
+        new_x.append(x[-1])
 
         print(new_x[0].shape)
         print(new_x[1].shape)
