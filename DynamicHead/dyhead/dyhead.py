@@ -68,11 +68,8 @@ class DyConv(nn.Module):
             if level > 0:
                 temp_fea.append(self.DyConv[2](x[feature_names[level - 1]], **conv_args))
             if level < len(x) - 1:
-                print(x)
                 temp_fea.append(F.upsample_bilinear(self.DyConv[0](x[feature_names[level + 1]], **conv_args),
-                                                    size=[feature.size(2), feature.size(3)]))
-                print(temp_fea)
-                
+                                                    size=[feature.size(2), feature.size(3)]))                
             attn_fea = []
             res_fea = []
             for fea in temp_fea:
@@ -119,16 +116,14 @@ class DyHead(nn.Module):
     def forward(self, x):
         x = self.backbone(x)
 
-        largest_layer_dim = x[-1].shape[-2:]
+        layers = ["level1", "level2", "level3"]
 
-        new_x = []
+        x.reverse()
+        x = dict(zip(layers, x))
 
-        for layer in x[:-1]:
-            new_x.append(F.upsample(layer, size=largest_layer_dim))
+        output = self.dyhead_tower(x)
 
-        new_x.append(x[-1])
+        layers.reverse()
+        dyhead_tower = [output[layer] for layer in layers]
 
-        x = dict(zip(["level1", "level2", "level3"], new_x))
-
-        dyhead_tower = self.dyhead_tower(x)
         return dyhead_tower
