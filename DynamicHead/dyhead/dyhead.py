@@ -115,7 +115,7 @@ class DyHead(nn.Module):
     # def size_divisibility(self):
     #     return self._size_divisibility
 
-    def forward(self, x, img_size):
+    def forward(self, x):
         x = self.backbone(x)
 
         layers = ["level1", "level2", "level3"]
