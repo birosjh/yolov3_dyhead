@@ -311,7 +311,7 @@ def load_model(model_path, weights_path=None, use_dyhead=False):
     """
     device = torch.device("cuda" if torch.cuda.is_available()
                           else "cpu")  # Select device for inference
-    model = Darknet(model_path).to(device)
+    model = Darknet(model_path, use_dyhead).to(device)
 
     model.apply(weights_init_normal)
 
@@ -322,7 +322,7 @@ def load_model(model_path, weights_path=None, use_dyhead=False):
         num_convs = 6 # Num Convolutional Layers in DyHead
         
 
-        model = DyHead(out_channels, channels, num_convs, model, use_dyhead).to(device)
+        model = DyHead(out_channels, channels, num_convs, model).to(device)
 
     # If pretrained weights are specified, start from checkpoint or weight file
     if weights_path:
