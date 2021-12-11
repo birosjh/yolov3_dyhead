@@ -316,7 +316,7 @@ def load_model(model_path, weights_path=None, use_dyhead=False):
         num_convs = 6 # Num Convolutional Layers in DyHead
         
 
-        model = DyHead(out_channels, channels, num_convs, model)
+        model = DyHead(out_channels, channels, num_convs, model).to(device)
 
     # If pretrained weights are specified, start from checkpoint or weight file
     if weights_path:
