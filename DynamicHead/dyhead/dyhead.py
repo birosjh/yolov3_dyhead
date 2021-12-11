@@ -68,8 +68,11 @@ class DyConv(nn.Module):
             if level > 0:
                 temp_fea.append(self.DyConv[2](x[feature_names[level - 1]], **conv_args))
             if level < len(x) - 1:
+                print(x)
                 temp_fea.append(F.upsample_bilinear(self.DyConv[0](x[feature_names[level + 1]], **conv_args),
                                                     size=[feature.size(2), feature.size(3)]))
+                print(temp_fea)
+                
             attn_fea = []
             res_fea = []
             for fea in temp_fea:
