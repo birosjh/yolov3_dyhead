@@ -117,6 +117,10 @@ class DyHead(nn.Module):
         largest_layer_dim = int(x[-1].shape[-1])
         scale_limit = largest_layer_dim / smallest_layer_dim
 
+        print(smallest_layer_dim)
+        print(largest_layer_dim)
+        print(scale_limit)
+
         scale_factors = [i for i in range(scale_limit, 1)]
 
         print(x[0].shape)
