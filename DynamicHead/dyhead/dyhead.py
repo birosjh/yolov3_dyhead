@@ -89,6 +89,8 @@ class DyHead(nn.Module):
         super(DyHead, self).__init__()
         self.backbone = backbone
         self.hyperparams = backbone.hyperparams
+        self.yolo_layers = backbone.yolo_layers
+
         in_channels = out_channels
 
         dyhead_tower = []
