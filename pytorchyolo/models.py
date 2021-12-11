@@ -193,7 +193,7 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                x = module[0](x, img_size)
+                # x = module[0](x, img_size)
                 yolo_outputs.append(x)
             layer_outputs.append(x)
         return yolo_outputs if self.training else torch.cat(yolo_outputs, 1)
