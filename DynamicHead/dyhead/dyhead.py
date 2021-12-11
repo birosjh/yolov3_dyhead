@@ -89,6 +89,7 @@ class DyHead(nn.Module):
         self.training = backbone.training
         self.hyperparams = backbone.hyperparams
         self.yolo_layers = backbone.yolo_layers
+        self.seen = backbone.seen
 
         in_channels = out_channels
 

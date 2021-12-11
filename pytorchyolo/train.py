@@ -216,8 +216,11 @@ def run():
                 ("train/loss", to_cpu(loss).item())]
             logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
-            model.seen += imgs.size(0)
-
+            if args.use_dyhead:
+                model.backbone.seen += imgs.size(0)
+            else:
+                model.seen += imgs.size(0)
+                
         # #############
         # Save progress
         # #############
