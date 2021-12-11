@@ -10,3 +10,4 @@ yolov3-tiny.weights
 yolov3.weights
 logs/
 output/*
+checkpoints
