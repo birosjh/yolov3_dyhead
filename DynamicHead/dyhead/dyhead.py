@@ -88,6 +88,7 @@ class DyHead(nn.Module):
     def __init__(self, out_channels, channels, num_convs, backbone):
         super(DyHead, self).__init__()
         self.backbone = backbone
+        self.training = backbone.training
         self.hyperparams = backbone.hyperparams
         self.yolo_layers = backbone.yolo_layers
 
@@ -114,7 +115,7 @@ class DyHead(nn.Module):
     # def size_divisibility(self):
     #     return self._size_divisibility
 
-    def forward(self, x):
+    def forward(self, x, img_size):
         x = self.backbone(x)
 
         layers = ["level1", "level2", "level3"]
@@ -122,9 +123,16 @@ class DyHead(nn.Module):
         x.reverse()
         x = dict(zip(layers, x))
 
-        output = self.dyhead_tower(x)
+        output, img_size = self.dyhead_tower(x)
 
         layers.reverse()
-        dyhead_tower = [output[layer] for layer in layers]
+        dyhead_tower = []
 
-        return dyhead_tower
+        for idx, layer in enumerate(layers):
+            layer_output = output[layer]
+            dyhead_tower.append(
+                self.yolo_layers[idx](layer_output, img_size)
+            )
+
+
+        return dyhead_tower if self.training else torch.cat(dyhead_tower, 1)

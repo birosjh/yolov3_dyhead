@@ -169,7 +169,7 @@ class YOLOLayer(nn.Module):
 class Darknet(nn.Module):
     """YOLOv3 object detection model"""
 
-    def __init__(self, config_path):
+    def __init__(self, config_path, use_dyhead):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
@@ -177,6 +177,8 @@ class Darknet(nn.Module):
                             for layer in self.module_list if isinstance(layer[0], YOLOLayer)]
         self.seen = 0
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
+
+        self.use_dyhead = use_dyhead
 
     def forward(self, x):
         img_size = x.size(2)
@@ -193,9 +195,13 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                # x = module[0](x, img_size)
+                if not self.use_dyhead:
+                    x = module[0](x, img_size)
                 yolo_outputs.append(x)
             layer_outputs.append(x)
+        if self.use_dyhead:
+            return yolo_outputs, img_size
+
         return yolo_outputs if self.training else torch.cat(yolo_outputs, 1)
 
     def load_darknet_weights(self, weights_path):
@@ -316,7 +322,7 @@ def load_model(model_path, weights_path=None, use_dyhead=False):
         num_convs = 6 # Num Convolutional Layers in DyHead
         
 
-        model = DyHead(out_channels, channels, num_convs, model).to(device)
+        model = DyHead(out_channels, channels, num_convs, model, use_dyhead).to(device)
 
     # If pretrained weights are specified, start from checkpoint or weight file
     if weights_path:
