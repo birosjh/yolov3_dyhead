@@ -1,7 +1,13 @@
+.idea
+.DS_Store
 data/VOC2012
+data/custom/images/*
+data/custom/labels/*
+data/custom/*.txt
 __pycache__/
 darknet53.conv.74
 yolov3-tiny.weights
 yolov3.weights
 logs/
-checkpoints/
+output/*
+checkpoints

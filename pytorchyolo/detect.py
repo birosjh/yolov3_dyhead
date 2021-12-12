@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 from torch.autograd import Variable
 
 from pytorchyolo.models import load_model
-from pytorchyolo.utils.utils import load_classes, rescale_boxes, non_max_suppression, print_environment_info
+from pytorchyolo.utils.utils import load_classes, rescale_boxes, non_max_suppression, print_environment_info, convert_boxes
 from pytorchyolo.utils.datasets import ImageFolder
 from pytorchyolo.utils.transforms import Resize, DEFAULT_TRANSFORMS
 
@@ -185,6 +185,64 @@ def _draw_and_save_output_image(image_path, detections, img_size, output_path, c
     fig, ax = plt.subplots(1)
     ax.imshow(img)
     # Rescale boxes to original image
+    detections = rescale_boxes(detections, img_size, img.shape[:2])
+    unique_labels = detections[:, -1].cpu().unique()
+    n_cls_preds = len(unique_labels)
+    # Bounding-box colors
+    cmap = plt.get_cmap("tab20b")
+    colors = [cmap(i) for i in np.linspace(0, 1, n_cls_preds)]
+    bbox_colors = random.sample(colors, n_cls_preds)
+    for x1, y1, x2, y2, conf, cls_pred in detections:
+
+        print(f"\t+ Label: {classes[int(cls_pred)]} | Confidence: {conf.item():0.4f}")
+
+        box_w = x2 - x1
+        box_h = y2 - y1
+
+        color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
+        # Create a Rectangle patch
+        bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
+        # Add the bbox to the plot
+        ax.add_patch(bbox)
+        # Add label
+        plt.text(
+            x1,
+            y1,
+            s=classes[int(cls_pred)],
+            color="white",
+            verticalalignment="top",
+            bbox={"color": color, "pad": 0})
+
+    # Save generated image with detections
+    plt.axis("off")
+    plt.gca().xaxis.set_major_locator(NullLocator())
+    plt.gca().yaxis.set_major_locator(NullLocator())
+    filename = os.path.basename(image_path).split(".")[0]
+    output_path = os.path.join(output_path, f"{filename}.png")
+    plt.savefig(output_path, bbox_inches="tight", pad_inches=0.0)
+    plt.close()
+
+
+def _convert_draw_and_save_output_image(image_path, img, detections, img_size, output_path, classes):
+    """Draws detections in output image and stores this.
+
+    :param image_path: Path to input image
+    :type image_path: str
+    :param detections: List of detections on image
+    :type detections: [Tensor]
+    :param img_size: Size of each image dimension for yolo
+    :type img_size: int
+    :param output_path: Path of output directory
+    :type output_path: str
+    :param classes: List of class names
+    :type classes: [str]
+    """
+    # Create plot
+    plt.figure()
+    fig, ax = plt.subplots(1)
+    ax.imshow(img)
+    # Rescale boxes to original image
+    detections = convert_boxes(detections, img.shape[:2])
     detections = rescale_boxes(detections, img_size, img.shape[:2])
     unique_labels = detections[:, -1].cpu().unique()
     n_cls_preds = len(unique_labels)

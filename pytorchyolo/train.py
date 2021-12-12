@@ -23,6 +23,7 @@ from pytorchyolo.test import _evaluate, _create_validation_data_loader
 from terminaltables import AsciiTable
 
 from torchsummary import summary
+from pytorchyolo.detect import _convert_draw_and_save_output_image
 
 
 def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_training=False):
@@ -55,6 +56,40 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu, multiscale_traini
         collate_fn=dataset.collate_fn,
         worker_init_fn=worker_seed_set)
     return dataloader
+
+
+def plot_bbox_dataloader(dataloader, class_names):
+    datalist = iter(dataloader)
+    while True:
+        try:
+            images_path, imgs, targets = datalist.__next__()
+            plot_bbox_batch_imgs(images_path, imgs, targets, class_names, img_size=416, output_path='output')
+        except:
+            break
+
+
+def plot_bbox_batch_imgs(images_path, imgs, targets, classes, img_size=416, output_path='output'):
+    img_detections = []
+    counter = 0
+    imgs = torch.permute(imgs, (0, 2, 3, 1))
+    # get img_detections ready
+    for i in range(len(images_path)):
+        img_detection = torch.tensor([])
+        while counter <= len(targets) - 1 and targets[counter][0] == i:
+            if img_detection.shape[0] == 0:
+                img_detection = targets[counter][1:].reshape(1, -1)
+            else:
+                img_detection = torch.vstack((img_detection, targets[counter][1:]))
+            counter += 1
+        # Add confidence value to match it with the img_detections parameter
+        conf = torch.tensor([100])
+        img_detection = torch.cat((img_detection, conf.repeat(img_detection.size(0))[:, None]), 1)
+        # has to rearrange column positions (x_center, y_center, width, height, confidence, class)
+        img_detection = torch.index_select(img_detection, 1, torch.LongTensor([1, 2, 3, 4, 5, 0]))
+        img_detections.append(img_detection)
+    for (image_path, img, detections) in zip(images_path, imgs, img_detections):
+        print(f"Image {image_path}:")
+        _convert_draw_and_save_output_image(image_path, img, detections, img_size=img_size, output_path=output_path, classes=classes)
 
 
 def run():
@@ -118,6 +153,8 @@ def run():
         args.n_cpu,
         args.multiscale_training)
 
+    # plot_bbox_dataloader(dataloader, class_names)
+
     # Load validation dataloader
     validation_dataloader = _create_validation_data_loader(
         valid_path,
@@ -155,12 +192,12 @@ def run():
 
         model.train()  # Set model to training mode
 
-        for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
+        for batch_i, (imgs_path, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc=f"Training Epoch {epoch}")):
             batches_done = len(dataloader) * epoch + batch_i
 
             imgs = imgs.to(device, non_blocking=True)
             targets = targets.to(device)
-
+            # plot_bbox_batch_imgs(imgs_path, imgs, targets, class_names)
             outputs = model(imgs)
 
             loss, loss_components = compute_loss(outputs, targets, model)
