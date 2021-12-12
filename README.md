@@ -45,7 +45,7 @@ docker run -dit -p 6006:6006 -v $(PWD):/code --name dyhead dyhead
 When running on an EC2 server, use this command to start a container:
 
 ```
-docker run --gpus all -p 6006:6006 -dit -v $(PWD):/code --name dyhead dyhead
+docker run --gpus all -p 6006:6006 -dit -v $PWD:/code --name dyhead dyhead
 ```
 
 Once started, you can access your container with:
@@ -66,7 +66,20 @@ To remove it, run:
 docker container rm dyhead
 ```
 
+If it is your first time building the container then DynamicHead is not installed yet, so please run the following command:
+
+```
+poetry run python3 -m pip install -e DynamicHead
+```
+
 ##### Data Setup
 
 The VOC dataset is in a different format than the COCO dataset that this model was originall built for.  To convert the VOC dataset to the COCO format, we used this [script](https://github.com/TannerGilbert/YOLO-Tutorials/blob/master/YOLO-Object-Detection-in-PyTorch/convert_voc_to_yolo.py)
+
+##### Training
+
+To begin training first ssh into the container using the command in the Docker section.
+
+Then run tmux to start a client session
+
 
