@@ -80,6 +80,26 @@ The VOC dataset is in a different format than the COCO dataset that this model w
 
 To begin training first ssh into the container using the command in the Docker section.
 
-Then run tmux to start a client session
+Then run tmux to start a client session.  Once inside the client session use the following commands to start training.
+
+Note: Both of these commands use the YOLOv3 tiny configurations.
+
+For pure YOLOv3 run:
+
+```
+./train.sh
+```
+
+For YOLOv3 + DyHead run:
+
+```
+./train_dyhead.sh
+```
+
+To run tensorboard use the following command:
+
+```
+poetry run tensorboard --logdir='logs' --host=0.0.0.0 --port=6006
+```
 
 
