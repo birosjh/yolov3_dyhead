@@ -117,7 +117,7 @@ class DyHead(nn.Module):
     def forward(self, x):
         x, img_size = self.backbone(x)
 
-        layers = ["level1", "level2", "level3"]
+        layers = ["level" + str(idx) for idx in range(len(x))]
 
         x.reverse()
         x = dict(zip(layers, x))
