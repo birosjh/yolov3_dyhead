@@ -91,9 +91,9 @@ class DyHead(nn.Module):
         self.yolo_layers = backbone.yolo_layers
         self.seen = backbone.seen
 
-        in_channels = int(self.hyperparams["out_channels"])
-        channels = int(self.hyperparams["channels"])
-        num_convs = int(self.hyperparams["num_convs"])
+        in_channels = int(self.hyperparams["dy_out_channels"])
+        channels = int(self.hyperparams["dy_channels"])
+        num_convs = int(self.hyperparams["dy_num_convs"])
 
         dyhead_tower = []
         for i in range(num_convs):
