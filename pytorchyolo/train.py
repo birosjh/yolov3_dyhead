@@ -109,6 +109,7 @@ def run():
     parser.add_argument("--nms_thres", type=float, default=0.5, help="Evaluation: IOU threshold for non-maximum suppression")
     parser.add_argument("--logdir", type=str, default="logs", help="Directory for training log files (e.g. for TensorBoard)")
     parser.add_argument("--seed", type=int, default=-1, help="Makes results reproducable. Set -1 to disable.")
+    parser.add_argument("--use_dyhead", action="store_true", help="Use DyHead during training")
     args = parser.parse_args()
     print(f"Command line arguments: {args}")
 
@@ -132,7 +133,7 @@ def run():
     # Create model
     # ############
 
-    model = load_model(args.model, args.pretrained_weights)
+    model = load_model(args.model, args.pretrained_weights, args.use_dyhead)
 
     # Print model
     if args.verbose:
@@ -252,8 +253,11 @@ def run():
                 ("train/loss", to_cpu(loss).item())]
             logger.list_of_scalars_summary(tensorboard_log, batches_done)
 
-            model.seen += imgs.size(0)
-
+            if args.use_dyhead:
+                model.backbone.seen += imgs.size(0)
+            else:
+                model.seen += imgs.size(0)
+                
         # #############
         # Save progress
         # #############

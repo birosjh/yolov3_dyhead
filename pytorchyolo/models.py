@@ -10,6 +10,8 @@ import numpy as np
 from pytorchyolo.utils.parse_config import parse_model_config
 from pytorchyolo.utils.utils import weights_init_normal
 
+from DynamicHead.dyhead import DyHead
+
 
 def create_modules(module_defs):
     """
@@ -167,7 +169,7 @@ class YOLOLayer(nn.Module):
 class Darknet(nn.Module):
     """YOLOv3 object detection model"""
 
-    def __init__(self, config_path):
+    def __init__(self, config_path, use_dyhead):
         super(Darknet, self).__init__()
         self.module_defs = parse_model_config(config_path)
         self.hyperparams, self.module_list = create_modules(self.module_defs)
@@ -175,6 +177,8 @@ class Darknet(nn.Module):
                             for layer in self.module_list if isinstance(layer[0], YOLOLayer)]
         self.seen = 0
         self.header_info = np.array([0, 0, 0, self.seen, 0], dtype=np.int32)
+
+        self.use_dyhead = use_dyhead
 
     def forward(self, x):
         img_size = x.size(2)
@@ -191,9 +195,13 @@ class Darknet(nn.Module):
                 layer_i = int(module_def["from"])
                 x = layer_outputs[-1] + layer_outputs[layer_i]
             elif module_def["type"] == "yolo":
-                x = module[0](x, img_size)
+                if not self.use_dyhead:
+                    x = module[0](x, img_size)
                 yolo_outputs.append(x)
             layer_outputs.append(x)
+        if self.use_dyhead:
+            return yolo_outputs, img_size
+
         return yolo_outputs if self.training else torch.cat(yolo_outputs, 1)
 
     def load_darknet_weights(self, weights_path):
@@ -291,7 +299,7 @@ class Darknet(nn.Module):
         fp.close()
 
 
-def load_model(model_path, weights_path=None):
+def load_model(model_path, weights_path=None, use_dyhead=False):
     """Loads the yolo model from file.
 
     :param model_path: Path to model definition file (.cfg)
@@ -303,9 +311,13 @@ def load_model(model_path, weights_path=None):
     """
     device = torch.device("cuda" if torch.cuda.is_available()
                           else "cpu")  # Select device for inference
-    model = Darknet(model_path).to(device)
+    model = Darknet(model_path, use_dyhead).to(device)
 
     model.apply(weights_init_normal)
+
+    if use_dyhead:
+        
+        model = DyHead(model).to(device)
 
     # If pretrained weights are specified, start from checkpoint or weight file
     if weights_path:
