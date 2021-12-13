@@ -83,7 +83,7 @@ class DyConv(nn.Module):
 
 
 class DyHead(nn.Module):
-    def __init__(self, out_channels, channels, num_convs, backbone):
+    def __init__(self, backbone):
         super(DyHead, self).__init__()
         self.backbone = backbone
         self.training = backbone.training
@@ -91,7 +91,9 @@ class DyHead(nn.Module):
         self.yolo_layers = backbone.yolo_layers
         self.seen = backbone.seen
 
-        in_channels = out_channels
+        in_channels = self.hyperparams["out_channels"]
+        channels = self.hyperparams["channels"]
+        num_convs = self.hyperparams["num_convs"]
 
         dyhead_tower = []
         for i in range(num_convs):
