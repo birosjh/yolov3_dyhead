@@ -1,5 +1,7 @@
 # Final Project: DyHead YOLOv3
 
+Note: This is a final project repository for the Deep Learning course at Georgia Institute of Technology OMSCS.  It is built using source code from the two libraries listed below and we do not take credit for that code nor intend for this repository to be used instead of either of those projects.  This project is for learning purposes only.
+
 Members:
 -	Hoyean Hwang
 -	Waris Kulnguan
