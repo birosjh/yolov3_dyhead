@@ -11,3 +11,4 @@ yolov3.weights
 logs/
 output/*
 checkpoints
+tests/tracing

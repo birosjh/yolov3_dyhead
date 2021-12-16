@@ -47,7 +47,7 @@ docker run -dit -p 6006:6006 -v $(PWD):/code --name dyhead dyhead
 When running on an EC2 server, use this command to start a container:
 
 ```
-docker run --gpus all -p 6006:6006 -dit -v $PWD:/code --name dyhead dyhead
+docker run --gpus --shm-size=2gb all -p 6006:6006 -dit -v $PWD:/code --name dyhead dyhead
 ```
 
 Once started, you can access your container with:
